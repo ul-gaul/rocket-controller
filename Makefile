@@ -1,6 +1,6 @@
 CC = cc
 MAIN = rocket_controller
-objects = main.o
+objects = main.o data_transmission.o
 LFLAGS = -lpthread
 CFLAGS = -Wall -g
 
