@@ -105,7 +105,32 @@ hardware, as well as using the operating system's features to your advantage.
 
 ### Why not use an IDE?
 
-asdf
+The first reason is very simple: we have to compile for the target platform.
+This can be acheived two ways:
+
+1. Compiling on the target platform
+2. Cross-compiling for the target platform, on another computer
+
+Since setting up a cross compiling toolchain for the Raspberry Pi is a tedious
+and error prone process, it is better to compile on the Raspberry Pi directly.
+Cross-compiling is shown in the GIF-3004 course when students are 3 years into
+the program. The setup is shown step by step with a protocole, the teacher and
+two teaching assistants and even then it's a mess. So we won't attempt to show
+it to you.
+
+So we are left with compiling on the target platform. Since the distribution
+we use does not have a desktop environment installed, we can't use an IDE on
+the Raspberry Pi.
+
+The other less pragmatic reason is simply because learning Makefile is a
+valuable skill to have as a computer engineer (also learning is fun).
+
+Also, making our own makefile gives us the total freedom and control
+over the compilation process. We decide exactly what libraries to use,
+what optimisations we want, etc.
+
+Finally, we can use the `.PHONY` targets to install the program, run it
+automatically, run unit tests, etc.
 
 ## Rocket controller Makefile explanation
 
