@@ -61,9 +61,9 @@ a bit further in this document.
 Also worth noting is how make reads a makefile. This process is explained in
 more details in the documentation, but here's a basic explanation:
 
-1- The makefile and included makefiles are parsed, variables, their values,
+1. The makefile and included makefiles are parsed, variables, their values,
 	implicit and explicit rules are internalized and a dependency graph is built.
-2- make uses this data to determine which targets need to be updated and runs
+2. make uses this data to determine which targets need to be updated and runs
 	the necessary recipes to update them.
 
 ## Why are we using Makefiles?
@@ -126,7 +126,7 @@ final binary's name.
 Then, a list of object files is defined. Objects are the result of compiling,
 but not linking, some source files.
 
-Then we have the library flags (LFLAGS), which are used to link important
+Then we have the library flags `LFLAGS`, which are used to link important
 external libraries to the project. For now, we only use the pthread library,
 so only have '-lpthread'. The '-l' is the option flag passed to the compiler
 that tells it to link the library 'pthread'. If we were to have more than 1
