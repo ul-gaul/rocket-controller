@@ -58,6 +58,14 @@ listing them all would be futile and counter-productive. Instead, we detail
 and document the currently used Makefile for the rocket_controller project
 a bit further in this document.
 
+Also worth noting is how make reads a makefile. This process is explained in
+more details in the documentation, but here's a basic explanation:
+
+1- The makefile and included makefiles are parsed, variables, their values,
+	implicit and explicit rules are internalized and a dependency graph is built.
+2- make uses this data to determine which targets need to be updated and runs
+	the necessary recipes to update them.
+
 ## Why are we using Makefiles?
 
 So for some readers this may seem like a lot of work. After all, why not use
@@ -72,9 +80,28 @@ or if we used an IDE (integrated development environment) to hide the magic
 behind a graphical interface. So let us provide some answers and justification
 for this seemingly masochistic process.
 
-### Why not use *insert modern programming langage*?
+### Why not use *insert modern programming language*?
 
-asdf
+There are several reasons to prefer C over other languages in our situation.
+First, this project was first developped for the Arduino platform in 2015
+to 2017. Then, we ported it to the STM32F407 platform for 2018 and then again
+switched to PIC32MZ in 2019. Finally, we are using a Raspberry Pi in 2020.
+This switch occured as the participants in the project (both hardware and
+firmware) improved their skills and wanted more performance out of the 
+avionics.
+
+Because the platform used in the future may change again, the reason for the
+use of the C language becomes obvious. C is a highly portable and high
+performance language. We can reuse code from the previous years and easily
+port them to the new platform.
+
+Another reason is simply that C is the most commonly used programming language
+for embedded projects, so chosing the same language helps a lot when looking
+for help online.
+
+Finally, learning C is an essential part of the learning experience as a
+computer science student. It forces the understanding of the underlying
+hardware, as well as using the operating system's features to your advantage.
 
 ### Why not use an IDE?
 
@@ -82,5 +109,63 @@ asdf
 
 ## Rocket controller Makefile explanation
 
-The Makefile used
+The Makefile used for the project is still a work in progress, but we can
+examine and explain it for everyone's benefit.
+
+### Variables
+
+At the top of the file, we see a bunch of variable assignments. Here's what
+they all mean.
+
+First, the variable CC is set to 'cc'. CC stands for C Compiler, this is where
+we choose what compiler we want make to use to compile our C source files.
+
+Next, the name of the project is defined. This variable is used to name the
+final binary's name.
+
+Then, a list of object files is defined. Objects are the result of compiling,
+but not linking, some source files.
+
+Then we have the library flags (LFLAGS), which are used to link important
+external libraries to the project. For now, we only use the pthread library,
+so only have '-lpthread'. The '-l' is the option flag passed to the compiler
+that tells it to link the library 'pthread'. If we were to have more than 1
+library, the variable would look like: `LFLAGS = -lpthread -lmath`.
+
+Next, the CFLAGS variable defines various options passed to the compiler.
+For instance, the -Wall option tells the compiler to enable all warnings.
+
+### Rules
+
+The first rule of the makefile is the first rule to be run by make. The syntax
+of the rule is as follows:
+
+```
+targets : prerequisites
+        recipe
+        ...
+```
+
+So for the first rule, the target is `all`, the prerequisites are all of our
+object files and the recipe is to order our compiler `cc` to link all of our
+prerequisites object files `$^` to generate the output file `rocket_controller`
+`-o $(MAIN)` using the linked libraries `LFLAGS` and options `CFLAGS` we want.
+
+So far all the variables are pretty straight forward, but what about that
+`$^`? This is called an 'automatic variable'. The GNU make documentation goes
+in more detail about what they are and what they do. For now, let's just note
+that this one means: "all of the prerequisites", which is all of our object
+files.
+
+The second rule is an *implicit* rule. The GNU make utility is smart enough
+to know that, just from the name of rule (all of our object files), we want
+to compile the associated source files of the same name seperatly. And so it
+does, saving us the trouble of writing a rule for all of our object files.
+
+### Phony targets
+
+At the end of the make file is the `clean` rule. This rule is used to clean
+the directory of binaries and other files generated when compiling. The
+`.PHONY` tells make that `clean` is not a file, just the name of the rule,
+which avoids confusion if we were to name a file `clean` in our directory.
 
