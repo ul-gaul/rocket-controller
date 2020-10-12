@@ -123,6 +123,14 @@ the Raspberry Pi.
 
 The other less pragmatic reason is simply because learning Makefile is a
 valuable skill to have as a computer engineer (also learning is fun).
+Also, speaking from experience, using an IDE with a bunch of freshmen is a
+recipe for disaster in the git tracking. People clone the repo in the
+workspace, add workspace files to the tracking and generally make a big mess
+of things. Using a Makefile mitigates part of the risk by:
+
+- forcing people to think before doing something
+- less files to deal with (more simplicity means easier cleaning of someone's
+	mess)
 
 Also, making our own makefile gives us the total freedom and control
 over the compilation process. We decide exactly what libraries to use,
