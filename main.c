@@ -8,9 +8,11 @@
 #include <pthread.h>
 
 #include "data_transmission.h"
+#include "logger.h"
 
 
-#define TX_PERIOD 500000
+#define TX_PERIOD  500000
+#define LOG_PERIOD 100000
 
 
 /* thread handles */
@@ -31,13 +33,14 @@ log_cont(void* args)
 	/* allow thread to be cancelled from main asynchronously */
 	pthread_setcanceltype(PTHREAD_CANCEL_ASYNCHRONOUS, NULL);
 
-	for (int i = 0; i < 10; ++i) {
-		printf("i = %d\n", i);
+	while (1) {
+		log_data();
 		usleep(100000);
 	}
 
 	return NULL;
 }
+
 
 
 /*
@@ -80,9 +83,6 @@ main(int argc, char** argv)
 		printf("error joining logger thread\n");
 		return -2;
 	}
-
-	/* TESTING */
-	pthread_cancel(data_sender_h);
 
 	if (pthread_join(data_sender_h, NULL)) {
 		printf("error joining data sender thread\n");
