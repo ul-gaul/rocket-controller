@@ -1,8 +1,10 @@
+TESTING = 0
+
 CC = cc
 MAIN = rocket_controller
 objects = main.o data_transmission.o
 LFLAGS = -lpthread
-CFLAGS = -Wall
+CFLAGS = -Wall -DTESTING=$(TESTING)
 
 
 all : $(objects)

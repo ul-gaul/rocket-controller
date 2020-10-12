@@ -9,7 +9,6 @@ the readers, I strongly suggest reading the make
 [documentation](https://www.gnu.org/software/make/manual/make.html) from the
 GNU project.
 
-
 ## What is a Makefile?
 
 A Makefile is a set of instruction for the compiler. It
@@ -159,6 +158,15 @@ library, the variable would look like: `LFLAGS = -lpthread -lmath`.
 
 Next, the CFLAGS variable defines various options passed to the compiler.
 For instance, the -Wall option tells the compiler to enable all warnings.
+The -DTESTING=$(TESTING) is an option to the compiler to define (-D) the
+preprocessor variable TESTING to whatever the TESTING variable is est at.
+The TESTING variable is passed from the command line to the
+make program, like so:
+
+`make all TESTING=1`
+
+If the argument is ommited, the value defaults to 0, as defined at the top of
+the Makefile.
 
 ### Rules
 
@@ -186,6 +194,13 @@ The second rule is an *implicit* rule. The GNU make utility is smart enough
 to know that, just from the name of rule (all of our object files), we want
 to compile the associated source files of the same name seperatly. And so it
 does, saving us the trouble of writing a rule for all of our object files.
+From the GNU make documentation:
+```
+n.o is made automatically from n.c with a recipe of the form ‘$(CC) $(CPPFLAGS) $(CFLAGS) -c’
+```
+
+This means whatever is defined as our `CFLAGS` is passed to all the implicit
+recipes.
 
 ### Phony targets
 
