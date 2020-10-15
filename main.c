@@ -11,8 +11,8 @@
 #include "logger.h"
 
 
-#define TX_PERIOD  500000
-#define LOG_PERIOD 100000
+#define DATATX_PERIOD  500000
+#define DATALOG_PERIOD 100000
 
 
 /* thread handles */
@@ -54,7 +54,7 @@ transmit_cont(void* args)
 
 	while (1) {
 		transmit_data();
-		usleep(TX_PERIOD);
+		usleep(DATATX_PERIOD);
 	}
 	return NULL;
 }
