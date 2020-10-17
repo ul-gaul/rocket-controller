@@ -5,7 +5,7 @@
 #include <stdio.h>
 #include <pthread.h>
 
-#include "utils.h"
+#include "../utils.h"
 
 
 extern pthread_mutex_t antenna_tx_lock;

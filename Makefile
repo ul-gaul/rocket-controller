@@ -1,14 +1,21 @@
+CC = cc
+
 TESTING = 0
 
-CC = cc
 MAIN = rocket_controller
-objects = main.o data_transmission.o logger.o
+objects = main.o logger.o crc.o data_transmission.o motor_acquisition.o motor_control.o mcu_command.o
 LFLAGS = -lpthread
-CFLAGS = -Wall -DTESTING=$(TESTING)
+CFLAGS = -Wall -pedantic -DTESTING=$(TESTING)
+SUBDIRS = rocket-packet data-transmission motor
+VPATH = $(SUBDIRS)
 
 
-all : $(objects)
+all : $(MAIN)
+
+$(MAIN) : $(objects)
 	$(CC) $^ -o $(MAIN) $(LFLAGS) $(CFLAGS)
+
+
 
 
 $(objects) :
@@ -16,5 +23,5 @@ $(objects) :
 
 .PHONY : clean
 clean :
-	rm $(MAIN) $(objects)
+	rm -f $(MAIN) $(objects)
 

@@ -7,7 +7,12 @@
 #include <unistd.h>
 #include <pthread.h>
 
-#include "data_transmission.h"
+#include "data-transmission/data_transmission.h"
+#include "data-transmission/crc.h"
+#include "motor/motor_acquisition.h"
+#include "motor/motor_control.h"
+#include "rocket-packet/rocket_packet.h"
+#include "rocket-packet/mcu_command.h"
 #include "logger.h"
 
 
@@ -92,6 +97,18 @@ main(int argc, char** argv)
 	printf("all threads joined\n");
 
 	pthread_mutex_destroy(&antenna_tx_lock);
+
+	/* TODO: remove this */
+	/* call functions to test that make will link them */
+	crc_t my_crc;
+	my_crc = crc_init();
+
+	read_motor_data();
+
+	int test;
+	test = actuators_init();
+
+	test = mc_valid_function(1);
 
 	return 0;
 }
