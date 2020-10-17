@@ -16,8 +16,6 @@ $(MAIN) : $(objects)
 	$(CC) $^ -o $(MAIN) $(LFLAGS) $(CFLAGS)
 
 
-
-
 $(objects) :
 
 

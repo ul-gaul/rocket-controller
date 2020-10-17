@@ -152,6 +152,14 @@ they all mean.
 First, the variable CC is set to 'cc'. CC stands for C Compiler, this is where
 we choose what compiler we want make to use to compile our C source files.
 
+Then, the `TESTING` variable is assigned a default value of 0. This value can
+be changed when calling make like so:
+```
+make TESTING=1
+```
+This is then used in the `$(CFLAGS)` to pass the definition of the variable
+`TESTING` to the C preprocessor.
+
 Next, the name of the project is defined. This variable is used to name the
 final binary's name.
 
@@ -168,13 +176,13 @@ Next, the CFLAGS variable defines various options passed to the compiler.
 For instance, the -Wall option tells the compiler to enable all warnings.
 The -DTESTING=$(TESTING) is an option to the compiler to define (-D) the
 preprocessor variable TESTING to whatever the TESTING variable is est at.
-The TESTING variable is passed from the command line to the
-make program, like so:
 
-`make all TESTING=1`
-
-If the argument is ommited, the value defaults to 0, as defined at the top of
-the Makefile.
+Finally, the SUBDIRS variable is defined as all the sub-directories that
+contain source files. Then, the VPATH variable is set to SUBDIRS. The VPATH
+variable is special: it is used by make to search for file in those
+directories, if they are not found in the root (top-level) directory. This is
+how make is able to compile object files in the root directory without being
+explicitly told the file locations.
 
 ### Rules
 
@@ -187,10 +195,15 @@ targets : prerequisites
         ...
 ```
 
-So for the first rule, the target is `all`, the prerequisites are all of our
-object files and the recipe is to order our compiler `cc` to link all of our
-prerequisites object files `$^` to generate the output file `rocket_controller`
-`-o $(MAIN)` using the linked libraries `LFLAGS` and options `CFLAGS` we want.
+So for the first rule, the target is `all`. Its prerequisite is the main
+project (`rocket_controller`). This way, when make is invoked, it checks that
+the main project is up to date and updates it if neede.
+
+The next rule is the rule for the main project, the prerequisites are all of
+our object files and the recipe is to order our compiler `cc` to link all of
+our prerequisites object files `$^` to generate the output file
+`rocket_controller` `-o $(MAIN)` using the linked libraries `LFLAGS` and
+options `CFLAGS` we want.
 
 So far all the variables are pretty straight forward, but what about that
 `$^`? This is called an 'automatic variable'. The GNU make documentation goes
