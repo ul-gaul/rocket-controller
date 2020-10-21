@@ -30,6 +30,18 @@ pthread_mutex_t antenna_tx_lock;
 
 
 /*
+ * Init a shared memory region to share across processes (accessible as a
+ * file)
+ */
+int
+init_rocketdata_shm(void)
+{
+
+	return 0;
+}
+
+
+/*
  * Thread target function to log data and events continuously
  */
 void *
@@ -65,10 +77,24 @@ transmit_cont(void* args)
 }
 
 
+/*
+ * Thread target function to poll the UART Rx buffer for motor commands
+ */
+void *
+poll_uart_rx(void* args)
+{
+
+	return NULL;
+}
+
+
 int
 main(int argc, char** argv)
 {
 	pthread_mutex_init(&antenna_tx_lock, NULL);
+
+	/* TODO: init shared memory for rocket data */
+	init_rocketdata_shm();
 
 	/* start all threads */
 	printf("starting threads\n");

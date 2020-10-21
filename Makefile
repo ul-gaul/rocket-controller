@@ -3,7 +3,8 @@ CC = cc
 TESTING = 0
 
 MAIN = rocket_controller
-objects = main.o logger.o crc.o data_transmission.o motor_acquisition.o motor_control.o mcu_command.o
+objects = main.o logger.o crc.o data_transmission.o motor_acquisition.o \
+	  motor_control.o mcu_command.o ring_buffer.o
 LFLAGS = -lpthread
 CFLAGS = -Wall -pedantic -DTESTING=$(TESTING)
 SUBDIRS = rocket-packet data-transmission motor
