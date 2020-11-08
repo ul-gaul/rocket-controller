@@ -11,12 +11,7 @@ inc_head(struct RingBuffer* rb)
 static int
 check_full(struct RingBuffer* rb)
 {
-	if (rb->head >= rb->tail) {
-		rb->head = rb->tail;
-		return ERBFULL;
-	} else {
-		return 0;
-	}
+	return ((rb->head - rb->tail) == rb->size) ? ERBFULL : 0;
 }
 
 
@@ -30,34 +25,47 @@ inc_tail(struct RingBuffer* rb)
 static int
 check_empty(struct RingBuffer* rb)
 {
-	if (rb->tail >= rb->head) {
-		rb->tail = rb->head;
-		return ERBEMPTY;
-	} else {
-		return 0;
-	}
+	return ((rb->head - rb->tail) == 0) ? ERBEMPTY : 0;
 }
 
+
 int
-rb_init(struct RingBuffer* rb, size_t item_size, size_t size, void** buf)
+rb_init(struct RingBuffer* rb, size_t item_size, size_t size, void* buf)
 {
-	/* check that size is a power of two */
-	if ((size & (size - 1)) != 0) {
+	/* check that size is a power of two (otherwise indexing won't work) */
+	if (((size & (size - 1)) != 0) || (size == 0)) {
 		return EBADSIZE;
 	}
 
+	if ((rb == NULL) || (buf == NULL)) {
+		return EBADPTR;
+	}
+
+	if (item_size <= 0) {
+		return EBADSIZE;
+	}
+
+	rb->head = 0;
+	rb->tail = 0;
+	rb->item_size = item_size;
+	rb->size = size;
+	rb->buf = buf;
+
 	return 0;
 }
+
 
 int
 rb_put(struct RingBuffer* rb, void* item)
 {
 	int err;
+	unsigned int offset;
 
 	err = check_full(rb);
 	if (err) return err;
 
-	memcpy(rb->buf[rb->head], item, rb->item_size);
+	offset = (rb->head & (rb->size - 1)) * rb->item_size;
+	memcpy(&rb->buf[offset], item, rb->item_size);
 
 	inc_head(rb);
 
@@ -69,13 +77,16 @@ int
 rb_get(struct RingBuffer* rb, void* item)
 {
 	int err;
+	unsigned int offset;
 
 	err = check_empty(rb);
 	if (err) return err;
 
-	memcpy(item, rb->buf[rb->tail], rb->item_size);
+	offset = (rb->tail & (rb->size - 1)) * rb->item_size;
+	memcpy(item, rb->buf[offset], rb->item_size);
 
 	inc_tail(rb);
 
 	return 0;
 }
+

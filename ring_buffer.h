@@ -15,6 +15,7 @@
 #define ERBEMPTY -1
 #define ERBFULL  -2
 #define EBADSIZE -3
+#define EBADPTR  -4
 
 
 struct RingBuffer {
@@ -22,14 +23,22 @@ struct RingBuffer {
 	unsigned int tail;
 	size_t item_size;
 	size_t size;
-	void** buf;
-} RingBuffer;
+	char* buf;
+};
 
 
 /*
  * Init a ring buffer struct with the pre-allocated buffer.
+ *
+ * Args:
+ *     rb: address of the ring buffer to initialise
+ *     item_size: size in bytes of the elements of the buffer
+ *     size: size of the buffer to be managed
+ *     buf: address of the buffer to be managed
+ *
+ * Returns the appropriate code on error.
  */
-int rb_init(struct RingBuffer* rb, size_t item_size, size_t size, void** buf);
+int rb_init(struct RingBuffer* rb, size_t item_size, size_t size, void* buf);
 
 
 /*
